@@ -422,3 +422,85 @@ example = function () {
 			(value: number) => console.log(value),
 			(err: any) => console.error(err));
 };
+
+/* * * * * * * * * * *
+ *   when/generator  *
+ * * * * * * * * * * */
+
+import genfn = require('when/generator');
+
+/* generator.lift */
+
+var genFn0 = function * () { yield 0 }
+var genFn1 = function * (a: number) { yield a };
+var genFn2 = function * (a: number, b: string) { yield a };
+var genFn3 = function * (a: number, b: string, c: boolean) { yield a };
+
+var genFn5 = function * (a: number, b: string, c: boolean, d: number, e: string) { yield a };
+
+var liftedGenFunc0 = genfn.lift(genFn0);
+var liftedGenFunc1 = genfn.lift(genFn1);
+var liftedGenFunc2 = genfn.lift(genFn2);
+var liftedGenFunc3 = genfn.lift(genFn3);
+
+var liftedGenFunc5 = genfn.lift(genFn5);
+
+promise = liftedGenFunc0();
+promise = liftedGenFunc1(1);
+promise = liftedGenFunc2(1, '2');
+promise = liftedGenFunc3(1, '2', true);
+
+promise = liftedGenFunc5(1, '2', true, 4, '5');
+
+example = function() {
+	// Lift the entire dns API
+	var promisedDns = nodefn.liftAll(dns);
+	var liftedResolver = genfn.lift(function * () {
+		let resolved = yield promisedDns.resolve("twitter.com");
+		let resolvedNs = yield promisedDns.resolveNs("facebook.com");
+		let resolvedMx = yield promisedDns.resolveMx("google.com");
+
+		return true;
+	});
+
+	liftedResolver()
+		.then((result: boolean) => {
+
+		})
+		.catch((err: any) => {
+
+		})
+}
+
+/* generator.call */
+
+promise = genfn.call(genFn0);
+promise = genfn.call(genFn1, 1);
+promise = genfn.call(genFn2, 1, '2');
+promise = genfn.call(genFn3, 1, '2', true);
+
+promise = genfn.call(genFn5, 1, '2', true, 4, '5');
+
+example = function () {
+	var loadPasswd = nodefn.lift(fs.readFile);
+
+	genfn.call(function * (path: string) {
+		return yield loadPasswd(path);
+	}, '/etc/passwd').done(
+		(passwd: Buffer) => console.log('Contents of /etc/passwd:\n' + passwd),
+		(error: any) => console.log('Something wrong happened: ' + error));
+};
+
+/* generator.apply */
+
+promise = genfn.apply(genFn2, [1, '2']);
+
+example = function () {
+	var loadPasswd = nodefn.lift(fs.readFile);
+
+	genfn.apply(function * (path: string) {
+		return yield loadPasswd(path);
+	}, ['/etc/passwd']).done(
+		(passwd: Buffer) => console.log('Contents of /etc/passwd:\n' + passwd),
+		(error: any) => console.log('Something wrong happened: ' + error));
+};

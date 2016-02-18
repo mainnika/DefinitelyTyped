@@ -1,6 +1,6 @@
 // Type definitions for When 2.4.0
 // Project: https://github.com/cujojs/when
-// Definitions by: Derek Cicerone <https://github.com/derekcicerone>, Wim Looman <https://github.com/Nemo157>
+// Definitions by: Derek Cicerone <https://github.com/derekcicerone>, Wim Looman <https://github.com/Nemo157>, Nikita Tokarchuk <https://github.com/mainnika>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
 declare function When<T>(value: When.Promise<T>): When.Promise<T>;
@@ -37,6 +37,13 @@ declare module When {
         interface NodeFn3<A1, A2, A3, T> extends _.Fn4<A1, A2, A3, NodeCallback<T>, void> { }
         interface NodeFn4<A1, A2, A3, A4, T> extends _.Fn5<A1, A2, A3, A4, NodeCallback<T>, void> { }
         interface NodeFn5<A1, A2, A3, A4, A5, T> extends _.Fn6<A1, A2, A3, A4, A5, NodeCallback<T>, void> { }
+
+        interface GeneratorFn0<T> extends _.Fn0<IterableIterator<T | Promise<T>>> { }
+        interface GeneratorFn1<A1, T> extends _.Fn1<A1, IterableIterator<T | Promise<T>>> { }
+        interface GeneratorFn2<A1, A2, T> extends _.Fn2<A1, A2, IterableIterator<T | Promise<T>>> { }
+        interface GeneratorFn3<A1, A2, A3, T> extends _.Fn3<A1, A2, A3, IterableIterator<T | Promise<T>>> { }
+        interface GeneratorFn4<A1, A2, A3, A4, T> extends _.Fn4<A1, A2, A3, A4, IterableIterator<T | Promise<T>>> { }
+        interface GeneratorFn5<A1, A2, A3, A4, A5, T> extends _.Fn5<A1, A2, A3, A4, A5, IterableIterator<T | Promise<T>>> { }
     }
 
     function attempt<T>(
@@ -340,4 +347,30 @@ declare module "when/node" {
     }
 
     function createCallback<TArg>(resolver: Resolver<TArg>): (err: any, arg: TArg) => void;
+}
+
+declare module "when/generator" {
+    import when = require('when');
+    import _ = when._;
+
+    function lift<T>(fn: _.GeneratorFn0<T>): _.LiftedFn0<T>;
+    function lift<A1, T>(fn: _.GeneratorFn1<A1, T>): _.LiftedFn1<A1, T>;
+    function lift<A1, A2, T>(fn: _.GeneratorFn2<A1, A2, T>): _.LiftedFn2<A1, A2, T>;
+    function lift<A1, A2, A3, T>(fn: _.GeneratorFn3<A1, A2, A3, T>): _.LiftedFn3<A1, A2, A3, T>;
+    function lift<A1, A2, A3, A4, T>(fn: _.GeneratorFn4<A1, A2, A3, A4, T>): _.LiftedFn4<A1, A2, A3, A4, T>;
+    function lift<A1, A2, A3, A4, A5, T>(fn: _.GeneratorFn5<A1, A2, A3, A4, A5, T>): _.LiftedFn5<A1, A2, A3, A4, A5, T>;
+
+    function call<T>(fn: _.GeneratorFn0<T>): when.Promise<T>;
+    function call<A1, T>(fn: _.GeneratorFn1<A1, T>, arg1: A1): when.Promise<T>;
+    function call<A1, A2, T>(fn: _.GeneratorFn2<A1, A2, T>, arg1: A1, arg2: A2): when.Promise<T>;
+    function call<A1, A2, A3, T>(fn: _.GeneratorFn3<A1, A2, A3, T>, arg1: A1, arg2: A2, arg3: A3): when.Promise<T>;
+    function call<A1, A2, A3, A4, T>(fn: _.GeneratorFn4<A1, A2, A3, A4, T>, arg1: A1, arg2: A2, arg3: A3, arg4: A4): when.Promise<T>;
+    function call<A1, A2, A3, A4, A5, T>(fn: _.GeneratorFn5<A1, A2, A3, A4, A5, T>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5): when.Promise<T>;
+
+    function apply<T>(fn: _.GeneratorFn0<T>, args: any[] | IArguments): when.Promise<T>;
+    function apply<T>(fn: _.GeneratorFn1<any, T>, args: any[] | IArguments): when.Promise<T>;
+    function apply<T>(fn: _.GeneratorFn2<any, any, T>, args: any[] | IArguments): when.Promise<T>;
+    function apply<T>(fn: _.GeneratorFn3<any, any, any, T>, args: any[] | IArguments): when.Promise<T>;
+    function apply<T>(fn: _.GeneratorFn4<any, any, any, any, T>, args: any[] | IArguments): when.Promise<T>;
+    function apply<T>(fn: _.GeneratorFn5<any, any, any, any, any, T>, args: any[] | IArguments): when.Promise<T>;
 }
