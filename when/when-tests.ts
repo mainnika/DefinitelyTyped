@@ -504,3 +504,29 @@ example = function () {
 		(passwd: Buffer) => console.log('Contents of /etc/passwd:\n' + passwd),
 		(error: any) => console.log('Something wrong happened: ' + error));
 };
+
+/* * * * * * * * *
+ *   when/poll   *
+ * * * * * * * * */
+
+import pollfn = require('when/poll');
+
+let pollFn = () => {
+	return ~~(Math.random() * 5);
+};
+
+let pollIntervalMs = 300;
+let pollIntervalPromise = () => {
+	let d = when.defer();
+	setTimeout(d.resolve.bind(d), pollIntervalMs);
+	return d.promise;
+};
+
+let pollCond = (dice: number) => {
+	return dice === 2;
+};
+
+let pollDelay = pollIntervalMs;
+
+promise = pollfn(pollFn, pollIntervalMs, pollCond);
+promise = pollfn(pollFn, pollIntervalPromise, pollCond, pollDelay);

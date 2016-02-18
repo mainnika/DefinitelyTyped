@@ -374,3 +374,16 @@ declare module "when/generator" {
     function apply<T>(fn: _.GeneratorFn4<any, any, any, any, T>, args: any[] | IArguments): when.Promise<T>;
     function apply<T>(fn: _.GeneratorFn5<any, any, any, any, any, T>, args: any[] | IArguments): when.Promise<T>;
 }
+
+declare module "when/poll" {
+    import when = require('when');
+    import _ = when._;
+
+    interface PollStatic {
+        <T>(task: (...args: any[]) => T, interval: number | (() => when.Promise<any>), condition: (value: T) => boolean, initialDelay?: number): when.Promise<T>;
+    }
+
+    var poll: PollStatic;
+
+    export = poll;
+}
