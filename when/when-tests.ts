@@ -530,3 +530,30 @@ let pollDelay = pollIntervalMs;
 
 promise = pollfn(pollFn, pollIntervalMs, pollCond);
 promise = pollfn(pollFn, pollIntervalPromise, pollCond, pollDelay);
+
+/* * * * * * * * * * *
+ *   when/parallel   *
+ * * * * * * * * * * */
+
+import parallelfn = require('when/parallel');
+
+let promisedFunctionGenerator = () => {
+
+	return (a: number, b: string) => {
+
+		let deferred = when.defer();
+
+		setTimeout(deferred.resolve.bind(deferred), ~~(Math.random() * 300));
+
+		return deferred.promise;
+	}
+};
+
+parallelfn([
+	promisedFunctionGenerator(),
+	() => 4,
+	promisedFunctionGenerator(),
+	promisedFunctionGenerator(),
+	promisedFunctionGenerator(),
+], 2, '4').then((results: any[]) => {
+});

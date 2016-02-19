@@ -387,3 +387,16 @@ declare module "when/poll" {
 
     export = poll;
 }
+
+declare module "when/parallel" {
+    import when = require('when');
+    import _ = when._;
+
+    interface ParallelStatic {
+        (arrayOfTasks: ((...args: any[]) => any | when.Promise<any>)[], ...args: any[]): when.Promise<any[]>;
+    }
+
+    var parallel: ParallelStatic;
+
+    export = parallel;
+}
